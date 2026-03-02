@@ -12,6 +12,8 @@
 #     name: python3
 # ---
 
+import matplotlib.pyplot as plt
+
 # %% [markdown]
 # # Explore the Midwest Survey dataset
 #
@@ -35,7 +37,6 @@ dataset = fetch_midwest_survey()
 X = dataset.X
 # y contains the target (the Census Region)
 y = dataset.y
-
 # %% [markdown]
 # ## Question 1: How many examples are there in the dataset?
 #
@@ -43,11 +44,11 @@ y = dataset.y
 
 # %%
 # Display the number of rows and columns
-
+# [5 rows x 28 columns]
 
 # %%
 # You can also look at the first few rows of the dataset
-X.head()
+print("X HEAD : ", X.head())
 
 # %% [markdown]
 # ## Question 2: What is the distribution of the target?
@@ -58,6 +59,16 @@ X.head()
 # %%
 # Count how many respondents belong to each region
 
+# https://stackoverflow.com/questions/34076177/matplotlib-horizontal-bar-chart-barh-is-upside-down
+# https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.barh.html
+counts = y.value_counts()
+print("Counts : ", counts)
+
+counts.plot.barh()
+plt.xlabel("target")
+plt.title("Question 2: What is the distribution of the target?")
+plt.tight_layout()
+#plt.show()
 
 # %%
 # Visualize the target distribution with a bar plot
@@ -74,12 +85,11 @@ X.head()
 
 # %%
 # List all column names
-
+print("Colonnes :", list(X.columns))
 
 # %%
 # Show data types for each column
-
-
+print("Types de données :", X.dtypes)
 # %% [markdown]
 # How many features are numerical? How many are categorical (text)?
 
@@ -97,15 +107,16 @@ TableReport(X)
 
 # %%
 # Check for NaN missing values
-
+missing = X.isna().sum()
 
 # %% [markdown]
 # Missing values can sometimes be encoded differently. Let's look at some columns more closely.
+print("Missing values : ", missing)
 
 # %%
 # Look at unique values for the Household_Income column
 # #X["Household_Income"].??
-
+print("Colonnes NaN : ", missing[missing > 0])
 # %%
 # Look at unique values for the Education column
 
