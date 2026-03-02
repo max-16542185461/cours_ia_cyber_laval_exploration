@@ -116,7 +116,7 @@ print("Missing values : ", missing)
 # %%
 # Look at unique values for the Household_Income column
 # #X["Household_Income"].??
-print("Colonnes NaN : ", missing[missing > 0])
+print("Colonnes NaN : ", missing["Household_Income"])
 # %%
 # Look at unique values for the Education column
 
