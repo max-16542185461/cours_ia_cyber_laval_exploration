@@ -29,3 +29,5 @@ Using the notebook "compare models":
 8. Among the three models, which one generalizes the best?  
 
 Once all these are done, you can continue to the [second part of the tutorial](https://github.com/MarieSacksick/midwest_survey_models).
+
+# Copilot a été utilisé pour générer du code python
