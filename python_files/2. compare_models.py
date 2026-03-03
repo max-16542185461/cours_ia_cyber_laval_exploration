@@ -12,6 +12,12 @@
 #     name: cours_ia_cyber_laval_exploration
 # ---
 
+from sklearn.metrics import classification_report
+import pandas as pd
+
+from sklearn.metrics import confusion_matrix
+from sklearn.model_selection import cross_validate
+
 # %% [markdown]
 # # Compare machine learning models
 #
@@ -98,20 +104,33 @@ cv_gb = cross_val_score(model_gb, X, y, cv=5)
 
 # %%
 y_pred_lr = model_lr.predict(X_test)
-
+y_pred_rf = model_rf.predict(X_test)
+y_pred_gb = model_gb.predict(X_test)
 # %%
 from skore import EstimatorReport
-report = EstimatorReport(estimator = model_lr,
+report_lr = EstimatorReport(estimator = model_lr,
                 X_test = X_test,
                 y_test = y_test)
-report.help()
-
+report_rf = EstimatorReport(estimator = model_rf,
+                X_test = X_test,
+                y_test = y_test)
+report_gb = EstimatorReport(estimator = model_gb,
+                X_test = X_test,
+                y_test = y_test)
 # %%
-report.metrics.summarize(pos_label="North Central").frame()
 
 # %% [markdown]
 # Which model has the highest recall?
-
+recall_comparison = pd.DataFrame({
+    "Model": ["Logistic Regression", "Random Forest", "Gradient Boosting"],
+    "Recall (North Central)": [
+        float(classification_report(y_test, y_pred_lr, output_dict=True)["North Central"]["recall"]),
+        float(classification_report(y_test, y_pred_rf, output_dict=True)["North Central"]["recall"]),
+        float(classification_report(y_test, y_pred_gb, output_dict=True)["North Central"]["recall"])
+    ]
+})
+print(recall_comparison)
+print("Highest recall:", recall_comparison.loc[recall_comparison["Recall (North Central)"].idxmax()])
 # %% [markdown]
 # ## Question 7: Which model has the best practical application?
 #
@@ -121,7 +140,24 @@ report.metrics.summarize(pos_label="North Central").frame()
 
 # %% [markdown]
 # Which model makes the most meaningful predictions in practice?
+cm_lr = confusion_matrix(y_test, y_pred_lr, labels=["other", "North Central"])
+cm_rf = confusion_matrix(y_test, y_pred_rf, labels=["other", "North Central"])
+cm_gb = confusion_matrix(y_test, y_pred_gb, labels=["other", "North Central"])
 
+def calculate_profit(cm):
+    tn, fp, fn, tp = cm[0,0], cm[0,1], cm[1,0], cm[1,1]
+    profit = (tp * 5) + (tn * 2) - (fp * 10) - (fn * 1)
+    return profit
+
+profit_lr = calculate_profit(cm_lr)
+profit_rf = calculate_profit(cm_rf)
+profit_gb = calculate_profit(cm_gb)
+
+profit_comparison = pd.DataFrame({
+    "Model": ["Logistic Regression", "Random Forest", "Gradient Boosting"],
+    "Profit": [profit_lr, profit_rf, profit_gb]
+})
+print("Best practical model:", profit_comparison.loc[profit_comparison["Profit"].idxmax()])
 # %% [markdown]
 # ## Question 8: Which model generalizes the best?
 #
@@ -139,6 +175,28 @@ report.metrics.summarize(pos_label="North Central").frame()
 #
 # Which model has the largest gap? That model is likely **overfitting**.
 
+cv_results_lr = cross_validate(model_lr, X, y, cv=5, return_train_score=True)
+cv_results_rf = cross_validate(model_rf, X, y, cv=5, return_train_score=True)
+cv_results_gb = cross_validate(model_gb, X, y, cv=5, return_train_score=True)
+
+generalization_comparison = pd.DataFrame({
+    "Model": ["Logistic Regression", "Random Forest", "Gradient Boosting"],
+    "Train Score": [
+        cv_results_lr["train_score"].mean(),
+        cv_results_rf["train_score"].mean(),
+        cv_results_gb["train_score"].mean()
+    ],
+    "Test Score": [
+        cv_results_lr["test_score"].mean(),
+        cv_results_rf["test_score"].mean(),
+        cv_results_gb["test_score"].mean()
+    ]
+})
+
+generalization_comparison["Gap"] = generalization_comparison["Train Score"] - generalization_comparison["Test Score"]
+
+print("\nBest generalization (smallest gap):", generalization_comparison.loc[generalization_comparison["Gap"].idxmin()])
+print("Most overfitting (largest gap):", generalization_comparison.loc[generalization_comparison["Gap"].idxmax()])
 # %%
 # TODO: Based on the results above, which model would you choose
 # for a real application? Write your answer as a comment below.

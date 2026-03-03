@@ -68,7 +68,7 @@ counts.plot.barh()
 plt.xlabel("target")
 plt.title("Question 2: What is the distribution of the target?")
 plt.tight_layout()
-#plt.show()
+plt.show()
 
 # %%
 # Visualize the target distribution with a bar plot
@@ -131,11 +131,16 @@ print("Colonnes NaN : ", missing["Household_Income"])
 # %%
 # TODO: display the value counts for the column
 # "How_much_do_you_personally_identify_as_a_Midwesterner"
-
+counts_midwesterner = X["How_much_do_you_personally_identify_as_a_Midwesterner"].value_counts()
+print("Counts Midwesterner : ", counts_midwesterner)
 
 # %%
 # TODO: make a bar plot of the results
-
+counts_midwesterner.plot.barh()
+plt.xlabel("target")
+plt.title("Question 5: What is the most common answer to 'How much do you personally identify as a Midwesterner'?")
+plt.tight_layout()
+plt.show()
 
 # %% [markdown]
 # ## Bonus: Explore another feature
