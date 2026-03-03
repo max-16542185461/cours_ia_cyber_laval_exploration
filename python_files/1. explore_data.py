@@ -12,8 +12,6 @@
 #     name: python3
 # ---
 
-import matplotlib.pyplot as plt
-
 # %% [markdown]
 # # Explore the Midwest Survey dataset
 #
@@ -37,6 +35,7 @@ dataset = fetch_midwest_survey()
 X = dataset.X
 # y contains the target (the Census Region)
 y = dataset.y
+
 # %% [markdown]
 # ## Question 1: How many examples are there in the dataset?
 #
@@ -44,11 +43,13 @@ y = dataset.y
 
 # %%
 # Display the number of rows and columns
-# [5 rows x 28 columns]
+
 
 # %%
 # You can also look at the first few rows of the dataset
-print("X HEAD : ", X.head())
+X.head()
+
+Résultat du print("X HEAD :", X.head()) -> [5 rows x 28 columns]
 
 # %% [markdown]
 # ## Question 2: What is the distribution of the target?
@@ -59,16 +60,6 @@ print("X HEAD : ", X.head())
 # %%
 # Count how many respondents belong to each region
 
-# https://stackoverflow.com/questions/34076177/matplotlib-horizontal-bar-chart-barh-is-upside-down
-# https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.barh.html
-counts = y.value_counts()
-print("Counts : ", counts)
-
-counts.plot.barh()
-plt.xlabel("target")
-plt.title("Question 2: What is the distribution of the target?")
-plt.tight_layout()
-plt.show()
 
 # %%
 # Visualize the target distribution with a bar plot
@@ -85,11 +76,12 @@ plt.show()
 
 # %%
 # List all column names
-print("Colonnes :", list(X.columns))
+
 
 # %%
 # Show data types for each column
-print("Types de données :", X.dtypes)
+
+
 # %% [markdown]
 # How many features are numerical? How many are categorical (text)?
 
@@ -107,16 +99,15 @@ TableReport(X)
 
 # %%
 # Check for NaN missing values
-missing = X.isna().sum()
+
 
 # %% [markdown]
 # Missing values can sometimes be encoded differently. Let's look at some columns more closely.
-print("Missing values : ", missing)
 
 # %%
 # Look at unique values for the Household_Income column
 # #X["Household_Income"].??
-print("Colonnes NaN : ", missing["Household_Income"])
+
 # %%
 # Look at unique values for the Education column
 
@@ -131,16 +122,11 @@ print("Colonnes NaN : ", missing["Household_Income"])
 # %%
 # TODO: display the value counts for the column
 # "How_much_do_you_personally_identify_as_a_Midwesterner"
-counts_midwesterner = X["How_much_do_you_personally_identify_as_a_Midwesterner"].value_counts()
-print("Counts Midwesterner : ", counts_midwesterner)
+
 
 # %%
 # TODO: make a bar plot of the results
-counts_midwesterner.plot.barh()
-plt.xlabel("target")
-plt.title("Question 5: What is the most common answer to 'How much do you personally identify as a Midwesterner'?")
-plt.tight_layout()
-plt.show()
+
 
 # %% [markdown]
 # ## Bonus: Explore another feature
